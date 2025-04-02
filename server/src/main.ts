@@ -1,4 +1,5 @@
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
+import cors from 'cors';
 
 import { publicProcedure, router } from './trpc.js';
 
@@ -10,9 +11,11 @@ const appRouter = router({
     return users;
   }),
 });
+export type AppRouter = typeof appRouter;
 
 const server = createHTTPServer({
   router: appRouter,
+  middleware: cors({ origin: '*' }), // 設定 CORS 為 '*'
 });
 
 const port = 4000;

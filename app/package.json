@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "@trpc-quickstart/app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@trpc/client": "^11.0.1",
+    "@trpc-quickstart/server": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
