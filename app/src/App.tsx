@@ -9,6 +9,29 @@ function App() {
     };
     fetchUserList();
   }, []);
+
+  useEffect(() => {
+    const fetchUserListStream = () => {
+      const unsubscriptable = trpc.subscribeUsersStream.subscribe(undefined, {
+        onData: (user) => {
+          console.log('stream user:', user);
+          if (user.isEnd) {
+            unsubscriptable.unsubscribe();
+          }
+        },
+        onError: (error) => {
+          console.error('error:', error);
+        },
+      });
+      return unsubscriptable;
+    };
+    const unsubscriptable = fetchUserListStream();
+
+    return () => {
+      unsubscriptable.unsubscribe();
+    };
+  }, []);
+
   return <div>tRPC app</div>;
 }
 

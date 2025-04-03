@@ -1,17 +1,7 @@
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import cors from 'cors';
 
-import { publicProcedure, router } from './trpc.js';
-
-type User = { id: string; name: string };
-
-const appRouter = router({
-  userList: publicProcedure.query(async () => {
-    const users: User[] = [{ id: '1', name: 'Roy' }];
-    return users;
-  }),
-});
-export type AppRouter = typeof appRouter;
+import { appRouter, type AppRouter } from './router.js';
 
 const server = createHTTPServer({
   router: appRouter,
@@ -21,3 +11,5 @@ const server = createHTTPServer({
 const port = 4000;
 server.listen(port);
 console.log(`API endpoint: http://localhost:${port}`);
+
+export type { AppRouter };

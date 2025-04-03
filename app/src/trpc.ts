@@ -1,13 +1,20 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import {
+  createTRPCClient,
+  httpBatchLink,
+  splitLink,
+  httpSubscriptionLink,
+} from '@trpc/client';
 import type { AppRouter } from '@trpc-quickstart/server';
-//     👆 **type-only** import
 
-// Pass AppRouter as generic here. 👇 This lets the `trpc` object know
-// what procedures are available on the server and their input/output types.
 export const trpc = createTRPCClient<AppRouter>({
   links: [
-    httpBatchLink({
-      url: 'http://localhost:4000',
+    splitLink({
+      condition: (op) => {
+        console.log('op.type:', op.type)
+        return op.type === 'subscription';
+      },
+      true: httpSubscriptionLink({ url: 'http://localhost:4000' }),
+      false: httpBatchLink({ url: 'http://localhost:4000' }),
     }),
   ],
 });
