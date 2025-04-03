@@ -11,6 +11,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const fetchGetUsersStream = async () => {
+      const responseIterable = await trpc.getUsersStream.query();
+      for await (const user of responseIterable) {
+        console.log('getUsersStream.user:', user);
+      }
+    };
+    fetchGetUsersStream();
+  }, []);
+
+  useEffect(() => {
     const fetchUserListStream = () => {
       const unsubscriptable = trpc.subscribeUsersStream.subscribe(undefined, {
         onData: (user) => {

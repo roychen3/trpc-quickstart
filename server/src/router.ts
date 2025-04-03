@@ -30,11 +30,11 @@ export const appRouter = router({
   userList: publicProcedure.query(async () => {
     return users;
   }),
-  // getUsersStream: publicProcedure.subscription(async function* (opts) {
-  //   yield* userGenerator(opts.signal); // 呼叫 userGenerator
-  // }),
+  getUsersStream: publicProcedure.query(async function* (opts) {
+    yield* userGenerator(opts.signal);
+  }),
   subscribeUsersStream: publicProcedure.subscription(async function* (opts) {
-    yield* userGenerator(opts.signal); // 呼叫 userGenerator
+    yield* userGenerator(opts.signal);
   }),
 });
 export type AppRouter = typeof appRouter;
