@@ -22,7 +22,6 @@ const GetUsersStream: React.FC = () => {
       .then(async (responseIterable) => {
         if (ignore) return;
 
-        setIsLoading(false);
         for await (const user of responseIterable) {
           setUsers((prev) => [...prev, user]);
         }
@@ -37,6 +36,8 @@ const GetUsersStream: React.FC = () => {
         }
       })
       .finally(() => {
+        if (ignore) return;
+
         setIsLoading(false);
       });
 
@@ -48,9 +49,8 @@ const GetUsersStream: React.FC = () => {
   return (
     <div>
       <h3>Get Users Stream</h3>
-      {isLoading ? 'loading...' : null}
       {error ? `Error: ${error}` : null}
-      {!isLoading && !error ? (
+      {!error ? (
         <>
           {users.map((user, idx) => {
             if (idx + 1 === users.length) {
@@ -58,6 +58,7 @@ const GetUsersStream: React.FC = () => {
             }
             return <span key={user.id}>{`${user.name}, `}</span>;
           })}
+          {isLoading ? <span>...</span> : null}
         </>
       ) : null}
     </div>

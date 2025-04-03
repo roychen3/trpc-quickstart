@@ -13,7 +13,6 @@ const SubscribeGetUsersStream: React.FC = () => {
 
     const unsubscriptable = trpc.subscribeGetUsersStream.subscribe(undefined, {
       onData: (user) => {
-        setIsLoading(false);
         setUsers((prev) => [...prev, user]);
         if (user.isEnd) {
           unsubscriptable.unsubscribe();
@@ -26,6 +25,9 @@ const SubscribeGetUsersStream: React.FC = () => {
           setError(new Error('Fetch users fails.'));
         }
       },
+      onComplete: () => {
+        setIsLoading(false);
+      },
     });
 
     return () => {
@@ -36,9 +38,8 @@ const SubscribeGetUsersStream: React.FC = () => {
   return (
     <div>
       <h3>Subscribe Get Users Stream</h3>
-      {isLoading ? 'loading...' : null}
       {error ? `Error: ${error}` : null}
-      {!isLoading && !error ? (
+      {!error ? (
         <>
           {users.map((user, idx) => {
             if (idx + 1 === users.length) {
@@ -46,6 +47,7 @@ const SubscribeGetUsersStream: React.FC = () => {
             }
             return <span key={user.id}>{`${user.name}, `}</span>;
           })}
+          {isLoading ? <span>...</span> : null}
         </>
       ) : null}
     </div>
