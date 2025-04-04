@@ -1,6 +1,8 @@
 # tRPC Quickstart
 
-此專案演示 query、query stream、subscription 三種拿資料的方式。
+此專案演示:
+- 拿取使用者資料使用 `query`、`query stream`、`subscription` 三種方式。
+- 建立聊天室使用 `websocket`。
 
 ## Quickstart
 
