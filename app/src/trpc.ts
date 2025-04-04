@@ -10,7 +10,6 @@ export const trpc = createTRPCClient<AppRouter>({
   links: [
     splitLink({
       condition: (op) => {
-        console.log('op.type:', op.type)
         return op.type === 'subscription';
       },
       true: httpSubscriptionLink({ url: 'http://localhost:4000' }),

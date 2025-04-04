@@ -23,6 +23,8 @@ const GetUsersStream: React.FC = () => {
         if (ignore) return;
 
         for await (const user of responseIterable) {
+          if (ignore) break;
+
           setUsers((prev) => [...prev, user]);
         }
       })
