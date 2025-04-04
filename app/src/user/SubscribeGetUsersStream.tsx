@@ -11,7 +11,7 @@ const SubscribeGetUsersStream: React.FC = () => {
     setIsLoading(true);
     setError(null);
 
-    const unsubscriptable = trpc.subscribeGetUsersStream.subscribe(undefined, {
+    const unsubscriptable = trpc.user.subscribeGetUsersStream.subscribe(undefined, {
       onData: (user) => {
         setUsers((prev) => [...prev, user]);
         if (user.isEnd) {

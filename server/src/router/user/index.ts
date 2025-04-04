@@ -1,8 +1,8 @@
-import { publicProcedure, router } from './trpc.js';
+import { publicProcedure, router } from '../../trpc.js';
 
-import { userGenerator, users } from './module/user/index.js';
+import { userGenerator, users } from '../../module/user/index.js';
 
-export const appRouter = router({
+export const userRouter = router({
   getUsers: publicProcedure.query(async () => {
     return users;
   }),
@@ -13,4 +13,3 @@ export const appRouter = router({
     yield* userGenerator(opts.signal);
   }),
 });
-export type AppRouter = typeof appRouter;

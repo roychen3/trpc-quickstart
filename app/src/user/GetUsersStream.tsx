@@ -3,7 +3,7 @@ import { trpc } from '../trpc';
 import { User } from './interface';
 
 const getUsersStream = async () => {
-  const usersIterable = await trpc.getUsersStream.query();
+  const usersIterable = await trpc.user.getUsersStream.query();
   return usersIterable;
 };
 

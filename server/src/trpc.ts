@@ -9,4 +9,5 @@ const t = initTRPC.create();
  * that can be used throughout the router
  */
 export const router = t.router;
+export const mergeRouters = t.mergeRouters;
 export const publicProcedure = t.procedure;

@@ -1,15 +1,6 @@
-import { createHTTPServer } from '@trpc/server/adapters/standalone';
-import cors from 'cors';
+import { type AppRouter } from './router/index.js';
 
-import { appRouter, type AppRouter } from './router.js';
-
-const server = createHTTPServer({
-  router: appRouter,
-  middleware: cors({ origin: '*' }), // 設定 CORS 為 '*'
-});
-
-const port = 4000;
-server.listen(port);
-console.log(`API endpoint: http://localhost:${port}`);
+import './server.js';
+import './wsServer.js';
 
 export type { AppRouter };
