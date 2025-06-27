@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { trpc } from '../trpc';
 import { User } from './interface';
 
-const getUsersStream = async () => {
-  const usersIterable = await trpc.user.getUsersStream.query();
+const getUsersStream = async (signal?: AbortSignal) => {
+  const usersIterable = await trpc.user.getUsersStream.query(undefined, {
+    signal,
+  });
   return usersIterable;
 };
 
@@ -13,23 +15,21 @@ const GetUsersStream: React.FC = () => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    let ignore = false;
+    const abortController = new AbortController();
 
     setIsLoading(true);
     setError(null);
 
-    getUsersStream()
+    getUsersStream(abortController.signal)
       .then(async (responseIterable) => {
-        if (ignore) return;
+        if (abortController.signal.aborted) return;
 
         for await (const user of responseIterable) {
-          if (ignore) break;
-
           setUsers((prev) => [...prev, user]);
         }
       })
       .catch((error) => {
-        if (ignore) return;
+        if (abortController.signal.aborted) return;
 
         if (error instanceof Error) {
           setError(error);
@@ -38,13 +38,15 @@ const GetUsersStream: React.FC = () => {
         }
       })
       .finally(() => {
-        if (ignore) return;
+        if (abortController.signal.reason === '_SKIP_') {
+          return;
+        }
 
         setIsLoading(false);
       });
 
     return () => {
-      ignore = true;
+      abortController.abort('_SKIP_');
     };
   }, []);
 
