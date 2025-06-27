@@ -1,6 +1,7 @@
 import {
   createTRPCClient,
   splitLink,
+  httpLink,
   httpBatchStreamLink,
   httpSubscriptionLink,
   createWSClient,
@@ -25,7 +26,11 @@ export const trpc = createTRPCClient<AppRouter>({
         true: wsLink({ client: wsClient }),
         false: httpSubscriptionLink({ url }),
       }),
-      false: httpBatchStreamLink({ url }),
+      false: splitLink({
+        condition: (op) => ['user.getUsersStream'].includes(op.path),
+        true: httpBatchStreamLink({ url, maxItems: 1 }),
+        false: httpLink({ url }),
+      }),
     }),
   ],
 });
