@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { trpc } from '../trpc';
 import { User } from './interface';
 
-const fetchGetUsers = async () => {
-  const userList = await trpc.user.getUsers.query();
+const fetchGetUsers = async (signal?: AbortSignal) => {
+  const userList = await trpc.user.getUsers.query(undefined, { signal });
   return userList;
 };
 
@@ -13,19 +13,19 @@ const NormalGetUsers: React.FC = () => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    let ignore = false;
+    const abortController = new AbortController();
 
     setIsLoading(true);
     setError(null);
 
-    fetchGetUsers()
+    fetchGetUsers(abortController.signal)
       .then((response) => {
-        if (ignore) return;
+        if (abortController.signal.aborted) return;
 
         setUsers(response);
       })
       .catch((error) => {
-        if (ignore) return;
+        if (abortController.signal.aborted) return;
 
         if (error instanceof Error) {
           setError(error);
@@ -38,7 +38,7 @@ const NormalGetUsers: React.FC = () => {
       });
 
     return () => {
-      ignore = true;
+      abortController.abort('The useEffect is cleaned up.');
     };
   }, []);
 
