@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { trpc } from '../trpc';
 import { Message } from './interface';
 
-const fetchGetMessages = () => {
-  return trpc.chatroom.getMessages.query();
+const fetchGetMessages = (signal: AbortSignal) => {
+  return trpc.chatroom.getMessages.query(undefined, { signal });
 };
 const fetchSendMessages = (params: { user: string; text: string }) => {
   return trpc.chatroom.sendMessage.mutate(params);
@@ -18,18 +18,18 @@ const Chatroom: React.FC = () => {
   const [triggerFetchMessages, setTriggerFetchMessages] = useState({});
 
   useEffect(() => {
-    let ignore = false;
+    const abortController = new AbortController();
 
     setError(null);
 
-    fetchGetMessages()
+    fetchGetMessages(abortController.signal)
       .then((response) => {
-        if (ignore) return;
+        if (abortController.signal.aborted) return;
 
         setMessages(response);
       })
       .catch((error) => {
-        if (ignore) return;
+        if (abortController.signal.aborted) return;
 
         if (error instanceof Error) {
           setError(error);
@@ -39,7 +39,7 @@ const Chatroom: React.FC = () => {
       });
 
     return () => {
-      ignore = true;
+      abortController.abort();
     };
   }, [triggerFetchMessages]);
 
