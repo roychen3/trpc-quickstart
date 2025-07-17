@@ -21,7 +21,7 @@ const handler = applyWSSHandler({
   },
 });
 
-wss.on('connection', (ws) => {
+wss.on('connection', (ws: WebSocketServer) => {
   console.log(`➕➕ Connection (${wss.clients.size})`);
   ws.once('close', () => {
     console.log(`➖➖ Connection (${wss.clients.size})`);
