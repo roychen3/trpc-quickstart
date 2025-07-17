@@ -3,7 +3,7 @@ import cors from 'cors';
 
 import { appRouter } from './router/index.js';
 
-const server = createHTTPServer({
+export const server = createHTTPServer({
   router: appRouter,
   middleware: cors({ origin: '*' }), // 設定 CORS 為 '*'
 });

@@ -1,12 +1,12 @@
-import { applyWSSHandler, WSSHandlerOptions } from '@trpc/server/adapters/ws';
+import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import { WebSocketServer } from 'ws';
-import { appRouter } from './router/index.js';
 
-const port = 4001;
+import { appRouter } from './router/index.js';
+import { server } from './server.js';
 
 const wss = new WebSocketServer({
-  port,
-}) as WSSHandlerOptions<never>['wss'];
+  server,
+})
 
 const handler = applyWSSHandler({
   wss,
@@ -28,7 +28,10 @@ wss.on('connection', (ws: WebSocketServer) => {
   });
 });
 
-console.log(`✅ WebSocket Server listening on ws://localhost:${port}`);
+const address = server.address();
+if (address && typeof address === 'object') {
+  console.log(`✅ WebSocket Server listening on ws://localhost:${address.port}`);
+}
 process.on('SIGTERM', () => {
   console.log('SIGTERM');
   handler.broadcastReconnectNotification();

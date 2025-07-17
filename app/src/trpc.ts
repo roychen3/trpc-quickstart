@@ -10,7 +10,7 @@ import {
 import type { AppRouter } from '@trpc-quickstart/server';
 
 const url = 'http://localhost:4000';
-const wsUrl = 'ws://localhost:4001';
+const wsUrl = 'ws://localhost:4000';
 const wsClient = createWSClient({
   url: wsUrl,
 });
