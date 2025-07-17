@@ -45,6 +45,9 @@ const Chatroom: React.FC = () => {
 
   useEffect(() => {
     const unsubscriptable = trpc.chatroom.onAddNewMessage.subscribe(undefined, {
+      context:{
+        useWS: true,
+      },
       onData(value) {
         console.log('onAddNewMessage:', value);
         setTriggerFetchMessages({});
