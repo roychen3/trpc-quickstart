@@ -24,5 +24,12 @@ export const chatroomRouter = router({
     })) {
       yield message;
     }
-  }),
+  }), 
+  // onAddNewMessage: publicProcedure.subscription(async function* ({ signal }) {
+  //   for await (const message of messageStream(chatroom, {
+  //     signal,
+  //   })) {
+  //     yield message;
+  //   }
+  // }),
 });
