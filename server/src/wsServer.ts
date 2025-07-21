@@ -6,9 +6,12 @@ import { server } from './server.js';
 
 const wss = new WebSocketServer({
   server,
-})
+});
 
 const handler = applyWSSHandler({
+  createContext: (opts) => {
+    return opts;
+  },
   wss,
   router: appRouter,
   // Enable heartbeat messages to keep connection open (disabled by default)
@@ -30,7 +33,9 @@ wss.on('connection', (ws: WebSocketServer) => {
 
 const address = server.address();
 if (address && typeof address === 'object') {
-  console.log(`✅ WebSocket Server listening on ws://localhost:${address.port}`);
+  console.log(
+    `✅ WebSocket Server listening on ws://localhost:${address.port}`
+  );
 }
 process.on('SIGTERM', () => {
   console.log('SIGTERM');

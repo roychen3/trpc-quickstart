@@ -6,6 +6,9 @@ import { appRouter } from './router/index.js';
 export const server = createHTTPServer({
   router: appRouter,
   middleware: cors({ origin: '*' }), // 設定 CORS 為 '*'
+  createContext: (opts) => {
+    return opts;
+  },
 });
 
 const port = 4000;
