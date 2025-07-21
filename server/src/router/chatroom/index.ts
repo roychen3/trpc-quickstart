@@ -18,8 +18,10 @@ export const chatroomRouter = router({
 
   getMessages: publicProcedure.query(() => chatroom.getMessages()),
 
-  onAddNewMessage: publicProcedure.subscription(async function* () {
-    for await (const message of messageStream(chatroom)) {
+  onAddNewMessage: publicProcedure.subscription(async function* ({ signal }) {
+    for await (const [message] of chatroom.onAddNewMessageAsyncIterator({
+      signal,
+    })) {
       yield message;
     }
   }),

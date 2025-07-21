@@ -1,4 +1,5 @@
-import { EventEmitter } from 'events';
+import { EventEmitter, on } from 'node:events';
+
 import { ChatroomService } from './interface.js';
 
 export interface Message {
@@ -18,15 +19,27 @@ export class Chatroom implements ChatroomService {
     return this._messages;
   }
 
+  getMessageEventName() {
+    return 'onAddNewMessage';
+  }
+
   addNewMessage(value: Message) {
     this._messages.push(value);
-    this._emitter.emit('onAddNewMessage', value);
+    this._emitter.emit(this.getMessageEventName(), value);
     return this._messages;
   }
 
-  onAddNewMessage(listener: (newTab: Message) => void) {
-    this._emitter.on('onAddNewMessage', listener);
-    return () => this._emitter.removeListener('onAddNewMessage', listener);
+  onAddNewMessage(listener: (newMessage: Message) => void) {
+    this._emitter.on(this.getMessageEventName(), listener);
+    return () =>
+      this._emitter.removeListener(this.getMessageEventName(), listener);
+  }
+
+  onAddNewMessageAsyncIterator(options: {
+    signal?: AbortSignal;
+  }): AsyncIterableIterator<Message[]> {
+    const eventName = this.getMessageEventName();
+    return on(this._emitter, eventName, { signal: options.signal });
   }
 }
 

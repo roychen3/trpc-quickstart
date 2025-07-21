@@ -9,4 +9,7 @@ export interface ChatroomService {
   getMessages: () => Message[];
   addNewMessage: (value: Message) => Message[];
   onAddNewMessage: (listener: (value: Message) => void) => () => void;
+  onAddNewMessageAsyncIterator(options: {
+    signal?: AbortSignal;
+  }): AsyncIterableIterator<Message[]>;
 }
