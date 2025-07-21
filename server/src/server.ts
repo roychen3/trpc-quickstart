@@ -11,3 +11,8 @@ export const server = createHTTPServer({
 const port = 4000;
 server.listen(port);
 console.log(`✅ tRPC Server listening on http://localhost:${port}`);
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM');
+  server.close();
+});
