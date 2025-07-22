@@ -1,6 +1,7 @@
 import NormalGetUsers from './user/NormalGetUsers';
-import GetUsersStream from './user/GetUsersStream';
 import SubscribeGetUsersStream from './user/SubscribeGetUsersStream';
+import GetUsersStream from './user/GetUsersStream';
+import GetUsersBackpressureStream from './user/GetUsersBackpressureStream';
 import Chatroom from './chatroom/Chatroom';
 
 function App() {
@@ -8,10 +9,14 @@ function App() {
     <>
       <h1>tRPC app</h1>
       <hr />
-      <h2>Stream Example</h2>
+      <h2>Get User</h2>
       <NormalGetUsers />
-      <GetUsersStream />
+      <hr />
       <SubscribeGetUsersStream />
+      <hr />
+      <h3>Stream Example</h3>
+      <GetUsersStream />
+      <GetUsersBackpressureStream />
       <hr />
       <h2>Websocket Example</h2>
       <Chatroom />
